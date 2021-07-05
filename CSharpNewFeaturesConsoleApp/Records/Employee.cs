@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CSharpNewFeaturesConsoleApp.Records
 {
-    public abstract record Person(string FirstName, string LastName)
+    public record Employee(string FirstName, string LastName, string Role) : Person(FirstName, LastName)
     {
-        public virtual Person GetPerson()
+        public override Employee GetPerson()
         {
             return this;
         }

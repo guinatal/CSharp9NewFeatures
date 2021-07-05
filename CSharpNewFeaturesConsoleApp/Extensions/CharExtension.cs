@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CSharpNewFeaturesConsoleApp.Extensions
 {
-    public static class CharExtensions
+    public static class CharExtension
     {
         public static bool IsLetter(this char c) =>
             c is >= 'a' and <= 'z' or >= 'A' and <= 'Z';

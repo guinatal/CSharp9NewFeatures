@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpNewFeaturesConsoleApp.Records
+namespace CSharpNewFeaturesConsoleApp.Classes
 {
-    public record Desk(string Name, string Color);
+    public class DocumentOptions
+    {
+
+    }
 }

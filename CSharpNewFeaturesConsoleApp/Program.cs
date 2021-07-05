@@ -1,9 +1,13 @@
 ﻿using BenchmarkDotNet.Running;
-using CSharpNewFeaturesConsoleApp.Benchmark;
+using CSharpNewFeaturesConsoleApp.Benchmarks;
+using CSharpNewFeaturesConsoleApp.Classes;
 using CSharpNewFeaturesConsoleApp.Extensions;
 using CSharpNewFeaturesConsoleApp.Records;
 using System;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+#region Main
 
 /// <see href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#top-level-statements">Top-level statements</see>
 /// <summary>
@@ -27,6 +31,12 @@ PatternMatchingEnhancements();
 
 PerformanceAndInterop();
 
+FitAndFinishFeatures();
+
+#endregion
+
+#region Record Types
+
 /// <see href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#record-types">Record Types</see>
 /// <summary>
 /// Record Types
@@ -39,9 +49,9 @@ static void RecordTypes()
     Console.WriteLine("RecordTypes");
 
     // example 1 => immutable properties
-    Person person1 = new("Guilherme", "Mello");
-    // person.FirstName = "Lucas"; // => compilation error
-    Console.WriteLine(person1);
+    Desk desk1 = new("desk xyz", "blue");
+    // desk1.Name = "desk xxx"; // => compilation error
+    Console.WriteLine(desk1);
 
     // example 2 => immutable properties
     Airplane airplane1 = new()
@@ -60,14 +70,18 @@ static void RecordTypes()
 
     // example 4 => mutate immutable properties of a record instance
     // A with expression makes a new record instance that is a copy of an existing record instance, with specified properties and fields modified.
-    Person person2 = person1 with { FirstName = "Lucas" };
-    Console.WriteLine(person2);
+    Desk desk2 = desk1 with { Name = "desk xxx" };
+    Console.WriteLine(desk2);
 
     // example 5 => inheritance
     // A record can inherit from another record. However, a record can't inherit from a class, and a class can't inherit from a record.
-    Desk desk1 = new("desk", "blue");
+    Employee employee1 = new("Guilherme", "Mello", "Developer");
     Console.WriteLine(desk1);
 }
+
+#endregion
+
+#region InitOnlySetters
 
 /// <see href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#init-only-setters">Init Only Setters</see>
 /// <summary>
@@ -94,6 +108,10 @@ static void InitOnlySetters()
     Console.WriteLine(airplane1);
 }
 
+#endregion
+
+#region PatternMatchingEnhancements
+
 /// <see href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#pattern-matching-enhancements">Pattern matching enhancements</see>
 /// <summary>
 /// Pattern matching enhancements
@@ -116,6 +134,10 @@ static void PatternMatchingEnhancements()
     Console.WriteLine(char2.IsLetter());
     Console.WriteLine(char2.IsLetterOrSeparator());
 }
+
+#endregion
+
+#region Performance and interop
 
 /// <see href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#performance-and-interop">Performance and interop</see>
 /// <summary>
@@ -205,7 +227,7 @@ static void SuppressingLocalsinit()
 {
     Console.WriteLine("SuppressingLocalsinit");
 
-    Console.WriteLine("To execute the banchmark press Y else press any other key, and then press Enter");
+    Console.WriteLine("Benchmark press Y else press any other key, and then press Enter");
 
     string executeBanchmark = Console.ReadLine();
     if (executeBanchmark.Equals("Y", StringComparison.OrdinalIgnoreCase))
@@ -213,3 +235,93 @@ static void SuppressingLocalsinit()
         var summary = BenchmarkRunner.Run<SkipLocalsInitBenchmark>();
     }
 }
+
+#endregion
+
+#region Fit and finish features
+
+/// <see href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#fit-and-finish-features">Fit and finish features</see>
+/// <summary>
+/// Fit and finish features
+/// </summary>
+static void FitAndFinishFeatures()
+{
+    Console.WriteLine("FitAndFinishFeatures");
+
+    // Many of the other features help you write code more efficiently.
+    // In C# 9.0, you can omit the type in a new expression when the created object's type is already known.
+    Document document1 = new();
+
+    // Target-typed new can also be used when you need to create a new object to pass as an argument to a method.
+    Document document2 = new(new());
+
+    // Another nice use for this feature is to combine it with init only properties to initialize a new object:
+    Document document3 = new()
+    {
+        Name = "Document XYZ"
+    };
+
+    // A similar feature improves the target type resolution of conditional expressions.
+    // With this change, the two expressions need not have an implicit conversion from one to the other,
+    // but may both have implicit conversions to a target type.
+    // You likely won't notice this change. What you will notice is that some conditional expressions that previously
+    // required casts or wouldn't compile now just work.
+    bool b = true;
+    int? result = b ? 0 : null; // nullable value type
+
+    // Starting in C# 9.0, you can add the static modifier to lambda expressions or anonymous methods.
+    // Static lambda expressions are analogous to the static local functions: a static lambda or anonymous
+    // method can't capture local variables or instance state. The static modifier prevents accidentally
+    // capturing other variables.
+    Func<double, double> square = static x => x * x;
+    double squareResult = square(10);
+
+    // Covariant return types provide flexibility for the return types of override methods.
+    // An override method can return a type derived from the return type of the overridden base method.
+    // This can be useful for records and for other types that support virtual clone or factory methods.
+    Employee employee1 = new("Guilherme", "Mello", "Developer");
+    employee1.GetPerson();
+
+    // In addition, the foreach loop will recognize and use an extension method GetEnumerator that otherwise satisfies the foreach pattern.
+    // This change means foreach is consistent with other pattern-based constructions such as the async pattern, and pattern-based deconstruction.
+    // In practice, this change means you can add foreach support to any type. You should limit its use to when enumerating an object makes sense in your design.
+    List<string> daysOfWeek = new() { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
+    IEnumerator<string> daysOfWeekEnumerator = daysOfWeek.GetEnumerator();
+
+    foreach (var dayOfWeek in daysOfWeekEnumerator)
+    {
+        Console.WriteLine($"{dayOfWeek} is a beautiful day");
+    }
+
+    // You can use discards as parameters to lambda expressions.
+    // This convenience enables you to avoid naming the argument, and the compiler may avoid using it. You use the _ for any argument.
+    Func<int, int, int> constant = static (_, _) => 42;
+    int constantResult = constant(5, 500);
+
+    // you can now apply attributes to local functions. For example, you can apply nullable attribute annotations to local functions.
+    string[] lines = { "test_123", "123", null };
+    Process(lines, "test");
+}
+
+/// <summary>
+/// You can now apply attributes to local functions. For example, you can apply nullable attribute annotations to local functions.
+/// </summary>
+#nullable enable
+static void Process(string?[] lines, string mark)
+{
+    foreach (var line in lines)
+    {
+        if (IsValid(line))
+        {
+            // Processing logic...
+        }
+    }
+
+    bool IsValid([NotNullWhen(true)] string? line)
+    {
+        return !string.IsNullOrEmpty(line) && line.Length >= mark.Length;
+    }
+}
+
+#endregion

@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace CSharpNewFeaturesConsoleApp.Benchmark
+namespace CSharpNewFeaturesConsoleApp.Benchmarks
 {
     public class SkipLocalsInitBenchmark
     {
