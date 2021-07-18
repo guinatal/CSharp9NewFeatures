@@ -3,7 +3,7 @@
 A simple C# project with some examples of what's new in C# 9.0
 
 - Framework .NET 6
-- NuGet Dependencies: `BenchmarkDotNet 0.13.0` and `BenchmarkDotNet.Annotations 0.13.0`
+- NuGet Dependencies: `BenchmarkDotNet 0.13.0`
 - What's new in C# 9.0: https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9
 
 ## Examples
