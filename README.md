@@ -15,7 +15,7 @@ A simple C# project with some examples of what's new in C# 9.0
   - Native sized integers
   - Function pointers
   - Suppress emitting localsinit flag `Benchmark`
-- `TODO:` Fit and finish features
+  - Fit and finish features
 - `TODO:` Support for code generators
 
 ## Benchmark
